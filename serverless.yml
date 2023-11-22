@@ -1,0 +1,54 @@
+service: dish-crud
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:us-east-1:765838046163:table/Suscriptores
+
+functions:
+  createSubscriber:
+    handler: src/createSubscriber.handler
+    events:
+      - httpApi:
+          path: /suscriptores
+          method: post
+  listSubscriber:
+    handler: src/listSubscriber.handler
+    events:
+      - httpApi:
+          path: /suscriptores
+          method: get
+  updateSubscriber:
+    handler: src/updateSubscriber.handler
+    events:
+      - httpApi:
+          path: /suscriptores
+          method: put
+  deleteSubscriber:
+    handler: src/deleteSubscriber.handler
+    events:
+      - httpApi:
+          path: /suscriptores
+          method: delete
+resources:
+  Resources:
+    Suscriptores:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Suscriptores
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: telefono_celular
+            AttributeType: S
+        KeySchema:
+          - AttributeName: telefono_celular
+            KeyType: HASH
+        
+
